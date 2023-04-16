@@ -70,10 +70,4 @@ const Page = () => {
   );
 };
 
-export const metadata = {
-  title: "Register",
-  description:
-    "This is the Register page of Todo App Project made for Next.js series",
-};
-
 export default Page;
