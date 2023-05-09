@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 export const Context = createContext({ user: {} });
 export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -59,6 +60,8 @@ export const LogoutBtn = () => {
 };
 
 export const TodoButton = ({ id, completed }) => {
+  const [isCompleted, setIsCompleted] = useState(completed);
+  console.log(isCompleted);
   const router = useRouter();
   const deleteHandler = async (id) => {
     try {
@@ -74,15 +77,18 @@ export const TodoButton = ({ id, completed }) => {
     }
   };
 
-  const updateHandler = async (id) => {
+  const updateHandler = async (id,completed) => {
     try {
-      const res = await fetch(`/api/task/${id}`, {
+       setIsCompleted(!completed);
+      
+       const res = await fetch(`/api/task/${id}`, {
         method: "PUT",
       });
       const data = await res.json();
       if (!data.success) return toast.error(data.message);
       toast.success(data.message);
       router.refresh();
+      
     } catch (error) {
       return toast.error(error);
     }
@@ -92,8 +98,8 @@ export const TodoButton = ({ id, completed }) => {
     <>
       <input
         type="checkbox"
-        checked={completed}
-        onChange={() => updateHandler(id)}
+        checked={isCompleted}
+        onChange={() => updateHandler(id,isCompleted)}
       />
       <button className="btn" onClick={() => deleteHandler(id)}>
         Delete
